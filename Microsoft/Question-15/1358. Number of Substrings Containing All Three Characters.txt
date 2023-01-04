@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int numberOfSubstrings(string s) {
+        // sliding window
+        unordered_map<char,int>mp;
+        int l = 0 , r = 0 , e = s.size()-1;
+
+        int ans = 0;
+
+        while(r < s.size()){
+
+            mp[s[r]]++;
+
+            while(mp['a'] && mp['b'] && mp['c']){   // good window
+
+                ans += 1 + (e-r);
+
+                mp[s[l]]--;
+                l++;
+            }
+
+            r++;
+        }
+
+        return ans;
+    }
+};
