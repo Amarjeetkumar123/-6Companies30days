@@ -1,5 +1,6 @@
 # Question 03
 
+### Explanation
 The idea is:
 
 1. The ZERO comes from 10.
