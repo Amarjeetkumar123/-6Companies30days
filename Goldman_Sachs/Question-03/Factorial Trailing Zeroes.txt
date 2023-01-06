@@ -1,0 +1,33 @@
+
+// This solution gives overflow
+
+class Solution {
+public:
+    int trailingZeroes(int n) {
+         int ans = 0;
+         
+         for(long long i=5; n/i >= 0; i=*5){
+            ans += (n/i);
+         }
+
+         return ans;
+    }
+};
+
+
+
+// overflow resolve
+class Solution {
+public:
+    int trailingZeroes(int n) {
+         int ans = 0;
+         while(n){
+
+             n = n/5;
+             ans += n;
+
+         }
+
+         return ans;
+    }
+};
