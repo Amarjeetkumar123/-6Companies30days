@@ -1,0 +1,53 @@
+class Solution {
+public:
+    double knightProbability(int n, int k, int row, int column) {
+        
+        // no moves so probability 1
+        if(k==0) return 1.0;
+
+        vector<vector<double>>curr(n,vector<double>(n,0.0));
+        vector<vector<double>>next(n,vector<double>(n,0.0));
+
+    // row and col offset for generating next move or child positions
+        int rowoffset[] = {-2,-2,-1,-1,2,2,1,1};
+        int coloffset[] = {1,-1,2,-2,1,-1,2,-2};
+
+        int nx,ny;
+        
+        // initial position probability 1
+        curr[row][column] = 1.0;
+
+          for(int m = 1; m <= k; m++){
+            for(int i = 0; i < n; i++){
+                for(int j = 0; j < n; j++){
+                     
+                    double moveProb = curr[i][j]/8.0;
+                    
+                    // generate valid child positions
+                    for(int w=0;w<8;w++)
+                    {
+                        nx = i + rowoffset[w];
+                        ny = j + coloffset[w];
+
+                        // update child position probability
+                        if(nx>=0 && nx<n && ny>=0 && ny<n)
+                            next[nx][ny] += moveProb;
+                    }     
+            }
+        }
+
+        curr = next;
+        fill(next.begin(),next.end(),vector<double>(n,0.0));
+    }
+
+        double sum = 0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                sum += curr[i][j];
+            }
+        }
+
+        return sum;
+
+    }
+};
