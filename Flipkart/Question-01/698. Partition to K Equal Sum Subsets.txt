@@ -1,0 +1,102 @@
+
+// Recursive solution (TLE)
+class Solution {
+public:
+    bool solve(int i, int bucket_num, int req_sum, int bucket_sum, vector<int>&nums, int k, vector<int>&alrdy_inc){
+        // base case
+        
+        if(bucket_num == k) // all buckets are filled with equal sum
+            return true;
+
+        if(bucket_sum == req_sum){
+            // recursive call for filling next bucket
+            return solve(0,bucket_num+1,req_sum,0,nums,k,alrdy_inc);
+        }
+        if(bucket_sum > req_sum)
+            return false;
+
+        if(i >= nums.size())
+            return false;
+
+        // recursive case
+        if(alrdy_inc[i] == 1){
+            return solve(i+1,bucket_num,req_sum,bucket_sum,nums,k,alrdy_inc);
+        }
+        else{
+
+            // include
+            bucket_sum += nums[i];
+            alrdy_inc[i] = 1;
+            bool include = solve(i+1,bucket_num,req_sum,bucket_sum,nums,k,alrdy_inc);
+
+            // exclude
+            bucket_sum -= nums[i];
+            alrdy_inc[i] = 0;
+            bool exclude = solve(i+1,bucket_num,req_sum,bucket_sum,nums,k,alrdy_inc);
+
+            return include || exclude;
+        }
+     
+    }
+    bool canPartitionKSubsets(vector<int>& nums, int k) {
+        
+        int total_sum = 0;
+        for(auto x : nums)
+            total_sum += x;
+
+        if(total_sum % k != 0)
+            return false;
+
+        // calculate required sum for each k buckets
+        int req_sum = total_sum / k;
+        vector<int>alrdy_inc(nums.size(),0);
+        
+        return solve(0,1,req_sum,0,nums,k,alrdy_inc);
+
+    }
+};
+
+
+
+
+
+
+
+// Optimised recursive solution (Accepted)
+
+class Solution {
+public:
+    bool solve(int i, int csum, vector<int>& nums, vector<bool>& v, int subs, int t){
+
+        if(subs == 0) return true;
+        if(csum > t) return false;
+        if(csum == t) return solve(0, 0, nums, v, subs - 1, t);
+        
+        int n = nums.size();
+
+        for(int j = i; j < n; j++){
+
+            if(v[j] or (csum + nums[j] > t)) continue;
+
+            v[j] = true;
+
+            if(solve(j+1, csum + nums[j], nums, v, subs, t)) return true;
+
+            v[j] = false;
+        }
+        return false;
+    }
+    bool canPartitionKSubsets(vector<int>& nums, int k) {
+
+        int tsum = 0, maxe = 0;
+
+        for(auto i : nums)
+             tsum += i, maxe = max(maxe, i);
+
+        if((tsum % k) or (maxe > tsum/k)) return false;
+
+        vector<bool> v(nums.size(), false);
+        
+        return solve(0, 0, nums, v, k, tsum/k);
+    }
+};
