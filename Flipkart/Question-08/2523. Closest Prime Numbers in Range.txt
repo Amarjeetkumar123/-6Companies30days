@@ -1,0 +1,48 @@
+class Solution {
+public:
+    vector<bool>isPrime;
+    void sieveOfEratosthenes(int n){
+
+       for (int num = 2; num * num <= n; num++)
+        {
+            if (isPrime[num])
+            {
+                for (int j = num * num; j <= n; j += num)
+                    isPrime[j] = false;
+            }
+        }
+    }
+
+    vector<int> closestPrimes(int left, int right) {
+        
+        isPrime.resize(right+1,1);
+
+        sieveOfEratosthenes(right+1);
+
+        isPrime[0] = 0;
+        isPrime[1] = 0;
+        
+        int prev = -1;
+        int min_diff = INT_MAX;
+        vector<int>ans(2,-1);
+
+        for(int i=left; i<=right; i++){
+
+            if(isPrime[i]){
+
+                if(prev == -1){
+                    prev = i;
+                }
+                else if(i-prev < min_diff){
+                    ans[0] = prev;
+                    ans[1] = i;
+                    min_diff = i-prev;
+                }
+
+                prev = i;   // update the prev
+            }
+        }
+
+        return ans;
+    }
+};
