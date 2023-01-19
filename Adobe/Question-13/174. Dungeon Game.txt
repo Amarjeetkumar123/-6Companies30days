@@ -1,0 +1,93 @@
+
+// Recursive Approach (TLE)
+
+class Solution {
+public:
+    int solve(vector<vector<int>>& dungeon, int i=0, int j=0){
+        int n = dungeon.size();
+        int m = dungeon[0].size();
+
+        if(i == n || j == m)
+            return 1e9;
+
+        if(i == n-1 && j == m-1)
+            return (dungeon[i][j] <= 0) ? -dungeon[i][j]+1 : 1;
+
+        int right_ans = solve(dungeon, i, j+1);
+        int down_ans = solve(dungeon, i+1, j);
+
+        int min_health_req = min(right_ans,down_ans) - dungeon[i][j];
+
+        return (min_health_req <= 0) ? 1 : min_health_req;
+
+    }
+    int calculateMinimumHP(vector<vector<int>>& dungeon) {
+        
+        return solve(dungeon);
+    }
+};
+
+
+// Memoization (Accepted)
+
+class Solution {
+public:
+    // Memoization
+    int solve(vector<vector<int>>& dungeon, vector<vector<int>>&dp, int i=0, int j=0){
+        int n = dungeon.size();
+        int m = dungeon[0].size();
+
+        if(i == n || j == m)
+            return 1e9;
+
+        if(i == n-1 && j == m-1)
+            return (dungeon[i][j] <= 0) ? -dungeon[i][j]+1 : 1;
+
+        if(dp[i][j] != 1e9)
+            return dp[i][j];
+
+        int right_ans = solve(dungeon, dp, i, j+1);
+        int down_ans = solve(dungeon, dp, i+1, j);
+
+        int min_health_req = min(right_ans,down_ans) - dungeon[i][j];
+
+        return dp[i][j] = (min_health_req <= 0) ? 1 : min_health_req;
+
+    }
+    int calculateMinimumHP(vector<vector<int>>& dungeon) {
+        
+        int n = dungeon.size();
+        int m = dungeon[0].size();
+        vector<vector<int>>dp(n+1,vector<int>(m+1,1e9));
+        return solve(dungeon,dp);
+    }
+};
+
+
+
+
+// Bottom Up Approach (Accepted)
+
+class Solution {
+public:
+    int calculateMinimumHP(vector<vector<int>>& dungeon) {
+        // Bottom Up Approach
+        int n = dungeon.size();
+        int m = dungeon[0].size();
+
+        vector<vector<int>>dp(n+1,vector<int>(m+1,1e9));
+
+        dp[n][m-1] = 1;
+        dp[n-1][m] = 1;
+
+        for(int i=n-1;i>=0;i--){
+            for(int j=m-1;j>=0;j--){
+
+                int need_health = min(dp[i+1][j], dp[i][j+1]) - dungeon[i][j]; // add it's cost
+                 dp[i][j] = need_health <= 0 ? 1 : need_health;
+            }
+        }
+
+        return dp[0][0];
+    }
+};
