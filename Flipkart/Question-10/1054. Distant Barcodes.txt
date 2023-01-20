@@ -1,0 +1,33 @@
+class Solution {
+public:
+    vector<int> rearrangeBarcodes(vector<int>& barcodes) {
+        
+        unordered_map<int,int>ump;
+        
+        for(auto x : barcodes)
+            ump[x]++;
+
+        priority_queue<pair<int,int>>pq; // max heap
+
+        for(auto j : ump){
+            pq.push(make_pair(j.second,j.first));
+        }
+
+        int i = 0;
+        pair<int,int> prev = {-1,0};
+        while(!pq.empty()){
+
+            auto top1 = pq.top();
+            pq.pop();
+            barcodes[i++] = top1.second;
+
+            if(prev.first > 0){
+                pq.push(prev);
+            }
+            top1.first--;
+            prev = top1;
+        }
+
+        return barcodes;
+    }
+};
