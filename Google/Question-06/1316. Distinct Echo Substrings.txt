@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int distinctEchoSubstrings(string text) {
+        // sliding window
+        
+        unordered_set<string>st;
+        int n = text.length();
+        for (int len = 1; len <= n / 2; len++) {
+            for (int l = 0, r = len, count = 0; l < n - len; l++, r++) {
+
+                if (text[l] == text[r]) count++;
+                else count = 0;
+
+                if (count == len) {
+                    st.insert(text.substr(l - len + 1, ((l + 1) - (l - len + 1))));
+                    count--;
+                }
+            }
+        }
+
+	    return st.size();
+    }
+};
