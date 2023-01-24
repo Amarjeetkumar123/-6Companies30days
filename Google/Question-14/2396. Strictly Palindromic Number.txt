@@ -1,0 +1,54 @@
+class Solution {
+    private:
+        void converter(int n , int i , vector<int>&temp){
+            int rem = 0;
+            while(n != 0){
+                
+                rem = n%i;
+                temp.push_back(rem);
+                
+                n = n/i;
+            }
+            
+        }
+    
+        bool palindromic(vector<int>temp){
+            
+            int s = 0;
+            int e = temp.size()-1;
+            
+            while(s <= e){
+                
+                if(temp[s] != temp[e]){
+                    return false;
+                }
+                s++;
+                e--;
+            }
+            
+            return true;
+        }
+public:
+    bool isStrictlyPalindromic(int n) {
+        int flag = 0;
+        for(int i= 2; i<= n-2; i++){
+            vector<int>temp;
+
+            converter(n,i,temp);
+            
+            reverse(temp.begin(),temp.end());
+            
+            if(palindromic(temp)){
+                flag = 1;
+            }
+            else{
+                flag = 0;
+            }  
+        }
+        
+        if(flag == 1){
+            return true;
+        }
+        return false;
+    }
+};
