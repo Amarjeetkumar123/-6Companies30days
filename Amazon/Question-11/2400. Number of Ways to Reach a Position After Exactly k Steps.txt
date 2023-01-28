@@ -1,0 +1,39 @@
+class Solution {
+    private:
+    long long mod = 1000000007;
+        int solve(int s , int e , int k ,int dp[][1005]){
+            // base case
+            if( abs(e-s) > k or (k - abs(e-s)) & 1) 
+                    return dp[s+1005][k] = 0;
+            
+            if(k==0 && s==e)
+                return dp[s+1005][k] = 1;
+            
+            
+            if(dp[s+1005][k] != -1)
+                return dp[s+1005][k] % mod;
+        
+            
+            // left call
+            long long left = 0+solve(s-1,e,k-1,dp);
+            
+            // right call
+            long long right = 0+solve(s+1,e,k-1,dp);
+            
+           dp[s+1005][k] = (left+right);
+            
+            return dp[s+1005][k]%mod;
+            
+            
+        }
+public:
+    int numberOfWays(int startPos, int endPos, int k) {
+        
+        int dp[3010][1005];
+        
+        memset(dp , -1 , sizeof(dp));
+        
+        return solve(startPos,endPos,k,dp);
+          
+    }
+};
