@@ -1,0 +1,77 @@
+class Solution {
+public:
+    vector<int> nextSmallerElementLeft(vector<int>&nums){
+        stack<int>st;
+        int n = nums.size();
+        vector<int>res(n);
+
+        for(int i=0;i<n;i++){
+
+            while(!st.empty() && nums[st.top()] >= nums[i])
+                st.pop();
+
+            if(st.empty())
+                res[i] = -1;
+            else
+                res[i] = st.top();
+
+            st.push(i);
+        }
+        
+        return res;
+    }
+
+    vector<int> nextSmallerElementRight(vector<int>&nums){
+
+        stack<int>st;
+        int n = nums.size();
+        vector<int>res(n);
+
+        for(int i=n-1;i>=0;i--){
+
+            while(!st.empty() && nums[st.top()] >= nums[i])
+                st.pop();
+
+            if(st.empty())
+                res[i] = n;
+            else
+                res[i] = st.top();
+
+            st.push(i);
+        }
+
+        return res;
+    }
+    int maxSumMinProduct(vector<int>& nums) {
+        
+        int n = nums.size();
+        vector<long>prefix_sum(n+1,0);
+
+        // calculate prefix sum
+        for(int i=0;i<n;i++){
+            prefix_sum[i+1] =  prefix_sum[i] + nums[i];
+        }
+
+        // store left minimum element index
+        vector<int> SmallerOnLeft = nextSmallerElementLeft(nums);
+        // store right minimum element index
+        vector<int> SmallerOnRight = nextSmallerElementRight(nums);
+
+        long max_minProduct = INT_MIN;
+        for(int i=0; i<n; i++){
+            
+            long min_elem = nums[i];
+
+            int lr = SmallerOnLeft[i]; // left min index
+            int rr = SmallerOnRight[i]; // rigth min index
+
+            // subarray sum with take min_elem
+            long sum = prefix_sum[rr] - prefix_sum[lr+1];
+
+            max_minProduct = max(max_minProduct, min_elem*sum);
+
+        }
+
+        return max_minProduct % 1000000007;
+    }
+};
